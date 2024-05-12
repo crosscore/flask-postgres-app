@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    image: flask-app:web
+    volumes:
+      - ./app:/app
+    ports:
+      - "5050:5050"
+    command: gunicorn --bind 0.0.0.0:5050 app:app
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    container_name: flask-app-db
+    volumes:
+      - flask-app-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+
+volumes:
+  flask-app-db-data:
